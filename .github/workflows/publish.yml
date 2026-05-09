@@ -1,11 +1,11 @@
-name: Publish Image to GHCR
+name: 🚀 Build and Deploy
 
 on:
   push:
     branches: [ "main" ]
     paths-ignore:
-      - 'k8s/**'
       - 'README.md'
+      - 'k8s/**'
       - 'docs/**'
   workflow_dispatch:
 
@@ -14,37 +14,131 @@ env:
   IMAGE_NAME: maolabs-dev/blog
 
 jobs:
+  detect-changes:
+    name: 🔍 Detect Changes
+    runs-on: ubuntu-latest
+    outputs:
+      code: ${{ steps.filter.outputs.code }}
+    steps:
+      - name: 📥 Checkout code
+        uses: actions/checkout@v4
+      - uses: dorny/paths-filter@v3
+        id: filter
+        with:
+          filters: |
+            code:
+              - 'app/**'
+              - 'config/**'
+              - 'public/**'
+              - 'resources/**'
+              - 'routes/**'
+              - 'composer.*'
+              - 'Dockerfile'
+              - '.github/workflows/**'
+
+  test:
+    name: 🧪 Run Tests (Smoke Test)
+    needs: detect-changes
+    if: needs.detect-changes.outputs.code == 'true' || github.event_name == 'workflow_dispatch'
+    runs-on: ubuntu-latest
+    steps:
+      - name: 📥 Checkout code
+        uses: actions/checkout@v4
+
+      - name: 🔧 Set up PHP
+        uses: shivammathur/setup-php@v2
+        with:
+          php-version: '8.3'
+          extensions: mbstring, xml, dom, bcmath
+          coverage: none
+
+      - name: 📦 Install Dependencies
+        run: composer install --no-ansi --no-interaction --no-scripts --no-progress --prefer-dist
+
+      - name: 🧪 Run Smoke Test
+        run: php artisan test --filter PostTest
+
   build-and-push:
+    name: 🏗️ Build and Push
+    needs: [detect-changes, test]
+    if: always() && (needs.test.result == 'success' || needs.test.result == 'skipped')
     runs-on: ubuntu-latest
     permissions:
       contents: read
       packages: write
 
     steps:
-      - name: Checkout repository
+      - name: 📥 Checkout repository
         uses: actions/checkout@v4
 
-      - name: Log in to the Container registry
+      - name: 🔐 Log in to the Container registry
         uses: docker/login-action@v3
         with:
           registry: ${{ env.REGISTRY }}
           username: ${{ github.actor }}
           password: ${{ secrets.GITHUB_TOKEN }}
 
-      - name: Extract metadata (tags, labels) for Docker
+      - name: 🏷️ Extract metadata (tags, labels)
         id: meta
         uses: docker/metadata-action@v5
         with:
           images: ${{ env.REGISTRY }}/${{ env.IMAGE_NAME }}
           tags: |
-            type=sha,format=long
-            type=edge,branch=main
-            latest
+            type=sha,prefix={{branch}}-
+            type=raw,value=latest,enable={{is_default_branch}}
+            type=raw,value=prod,enable=${{ github.ref == 'refs/heads/main' }}
 
-      - name: Build and push Docker image
+      - name: 🏗️ Build and push Docker image
         uses: docker/build-push-action@v5
         with:
           context: .
           push: true
           tags: ${{ steps.meta.outputs.tags }}
           labels: ${{ steps.meta.outputs.labels }}
+          cache-from: type=gha
+          cache-to: type=gha,mode=max
+
+  deploy:
+    name: 🚀 Deploy to VPS
+    needs: build-and-push
+    if: github.ref == 'refs/heads/main'
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: 📥 Checkout code
+        uses: actions/checkout@v4
+
+      - name: 🔧 Set up kubectl
+        uses: azure/setup-kubectl@v3
+        with:
+          version: "latest"
+
+      - name: 🔐 Configure kubectl
+        run: |
+          echo "📌 Configurando acesso ao cluster..."
+          # Usando o secret KUBE_CONFIG (deve ser o base64 do seu arquivo kubeconfig)
+          echo "${{ secrets.KUBE_CONFIG }}" | base64 -d > kubeconfig.yaml
+          export KUBECONFIG=kubeconfig.yaml
+          kubectl cluster-info
+
+      - name: 🚀 Apply K8s Manifests
+        run: |
+          export KUBECONFIG=kubeconfig.yaml
+          
+          # Aplica os manifestos (Namespace, Secret, Service, Ingress)
+          kubectl apply -f k8s/setup.yaml
+          kubectl apply -f k8s/ingress.yaml
+          kubectl apply -f k8s/app.yaml
+
+          # Força o rollout restart para garantir que o K8s baixe a nova imagem :latest
+          echo "🔄 Rollout restart..."
+          kubectl rollout restart deployment/maolabs-blog -n maolabs
+          
+          echo "⏳ Aguardando rollout..."
+          kubectl rollout status deployment/maolabs-blog -n maolabs --timeout=300s
+
+      - name: ✅ Verify deployment
+        run: |
+          export KUBECONFIG=kubeconfig.yaml
+          kubectl get pods -n maolabs
+          kubectl get ingress -n maolabs
