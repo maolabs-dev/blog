@@ -37,4 +37,4 @@ Esse blog também acabou virando uma forma de testar como IA se comporta em sist
 
 Não existe nenhuma grande tese aqui. É mais um espaço para escrever sobre arquitetura, desenvolvimento, IA e coisas que vou testando no caminho.
 
-Seja bem-vindo ao Maolabs.blog.
+Seja bem-vindo ao blog.maolabs.
