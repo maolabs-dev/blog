@@ -124,20 +124,16 @@ jobs:
           export KUBECONFIG=kubeconfig.yaml
           kubectl cluster-info
 
-      - name: 🚀 Apply K8s Manifests
+      - name: 🚀 Rollout Deployment
         run: |
           export KUBECONFIG=kubeconfig.yaml
           
-          # Aplica os manifestos (Namespace, Secret, Service, Ingress)
-          kubectl apply -f k8s/setup.yaml
-          kubectl apply -f k8s/ingress.yaml
-          kubectl apply -f k8s/app.yaml
-
-          # Força o rollout restart para garantir que o K8s baixe a nova imagem :latest
-          echo "🔄 Rollout restart..."
+          # Apenas força o reinício para baixar a nova imagem :latest.
+          # Configurações de Secret/Ingress devem ser geridas manualmente na VPS.
+          echo "🔄 Iniciando rollout restart na VPS..."
           kubectl rollout restart deployment/maolabs-blog -n maolabs
           
-          echo "⏳ Aguardando rollout..."
+          echo "⏳ Aguardando conclusão..."
           kubectl rollout status deployment/maolabs-blog -n maolabs --timeout=300s
 
       - name: ✅ Verify deployment
