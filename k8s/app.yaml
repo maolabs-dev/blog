@@ -15,6 +15,10 @@ spec:
       labels:
         app: maolabs-blog
     spec:
+      # Se a sua imagem no GHCR for privada, você precisa deste secret.
+      # Se for pública (recomendado para o blog), você pode comentar estas duas linhas.
+      imagePullSecrets:
+      - name: ghcr-secret
       containers:
       - name: blog
         image: ghcr.io/maolabs-dev/blog:latest

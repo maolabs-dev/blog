@@ -3,6 +3,10 @@ name: Publish Image to GHCR
 on:
   push:
     branches: [ "main" ]
+    paths-ignore:
+      - 'k8s/**'
+      - 'README.md'
+      - 'docs/**'
   workflow_dispatch:
 
 env:
