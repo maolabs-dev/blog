@@ -7,16 +7,15 @@ RUN composer install --no-dev --no-scripts --no-interaction --prefer-dist --opti
 # --- Runtime stage ---
 FROM php:8.3-alpine
 
-# Extensões mínimas para Laravel (sem DB)
+# Extensões mínimas para Laravel
 RUN apk add --no-cache \
         libxml2-dev \
         oniguruma-dev \
     && docker-php-ext-install \
+        bcmath \
         mbstring \
         xml \
-        ctype \
-        tokenizer \
-        fileinfo \
+        dom \
     && apk del libxml2-dev oniguruma-dev \
     && rm -rf /var/cache/apk/*
 
