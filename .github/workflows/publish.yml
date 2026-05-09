@@ -104,7 +104,7 @@ jobs:
   deploy:
     name: 🚀 Deploy to VPS
     needs: build-and-push
-    if: github.ref == 'refs/heads/main'
+    if: always() && github.ref == 'refs/heads/main' && needs.build-and-push.result == 'success'
     runs-on: ubuntu-latest
 
     steps:
