@@ -1,0 +1,65 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: maolabs-blog
+  namespace: maolabs
+  labels:
+    app: maolabs-blog
+spec:
+  replicas: 2
+  selector:
+    matchLabels:
+      app: maolabs-blog
+  template:
+    metadata:
+      labels:
+        app: maolabs-blog
+    spec:
+      containers:
+      - name: blog
+        image: ghcr.io/maolabs-dev/blog:latest
+        ports:
+        - containerPort: 8000
+        env:
+        - name: APP_ENV
+          value: "production"
+        - name: APP_DEBUG
+          value: "false"
+        - name: APP_KEY
+          valueFrom:
+            secretKeyRef:
+              name: blog-secrets
+              key: APP_KEY
+        resources:
+          limits:
+            cpu: "500m"
+            memory: "256Mi"
+          requests:
+            cpu: "100m"
+            memory: "128Mi"
+        livenessProbe:
+          httpGet:
+            path: /up
+            port: 8000
+          initialDelaySeconds: 10
+          periodSeconds: 30
+        readinessProbe:
+          httpGet:
+            path: /up
+            port: 8000
+          initialDelaySeconds: 5
+          periodSeconds: 10
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: maolabs-blog-service
+  namespace: maolabs
+spec:
+  selector:
+    app: maolabs-blog
+  ports:
+    - protocol: TCP
+      port: 80
+      targetPort: 8000
+  type: ClusterIP

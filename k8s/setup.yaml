@@ -1,0 +1,13 @@
+apiVersion: v1
+kind: Namespace
+metadata:
+  name: maolabs
+---
+apiVersion: v1
+kind: Secret
+metadata:
+  name: blog-secrets
+  namespace: maolabs
+type: Opaque
+stringData:
+  APP_KEY: "base64:COLOQUE_SUA_CHAVE_AQUI" # Gere com 'php artisan key:generate --show'
