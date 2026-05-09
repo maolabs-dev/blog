@@ -19,7 +19,7 @@ spec:
       - name: blog
         image: ghcr.io/maolabs-dev/blog:latest
         ports:
-        - containerPort: 8000
+        - containerPort: 80
         env:
         - name: APP_ENV
           value: "production"
@@ -40,13 +40,13 @@ spec:
         livenessProbe:
           httpGet:
             path: /up
-            port: 8000
+            port: 80
           initialDelaySeconds: 10
           periodSeconds: 30
         readinessProbe:
           httpGet:
             path: /up
-            port: 8000
+            port: 80
           initialDelaySeconds: 5
           periodSeconds: 10
 ---
@@ -61,5 +61,5 @@ spec:
   ports:
     - protocol: TCP
       port: 80
-      targetPort: 8000
+      targetPort: 80
   type: ClusterIP
