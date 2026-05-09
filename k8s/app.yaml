@@ -29,6 +29,14 @@ spec:
           value: "production"
         - name: APP_DEBUG
           value: "false"
+        - name: LOG_CHANNEL
+          value: "stderr" # Garante que os erros apareçam no kubectl logs
+        - name: SESSION_DRIVER
+          value: "cookie" # Sem banco de dados
+        - name: CACHE_STORE
+          value: "file"
+        - name: QUEUE_CONNECTION
+          value: "sync"
         - name: APP_KEY
           valueFrom:
             secretKeyRef:
