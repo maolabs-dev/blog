@@ -41,6 +41,9 @@
         });
     </script>
 
+    <!-- Analytics Placeholder -->
+    @stack('analytics')
+
     <script>
         // Previne flash de tema claro
         if (localStorage.getItem('theme') === 'dark' || (!localStorage.getItem('theme') && window.matchMedia('(prefers-color-scheme: dark)').matches)) {
