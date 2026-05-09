@@ -2,7 +2,9 @@
 FROM composer:2 AS deps
 WORKDIR /app
 COPY composer.json composer.lock ./
-RUN composer install --no-dev --no-scripts --no-interaction --prefer-dist --optimize-autoloader
+# Força o Composer a resolver as dependências para o PHP 8.3, evitando erros de platform_check no FrankenPHP
+RUN composer config platform.php 8.3.0 \
+    && composer install --no-dev --no-scripts --no-interaction --prefer-dist --optimize-autoloader
 
 # --- Stage 2: Runtime (FrankenPHP Alpine) ---
 FROM dunglas/frankenphp:1-php8.3-alpine
