@@ -3,6 +3,26 @@
 @section('title', $post->title . ' — Maolabs Blog')
 @section('meta_description', $post->excerpt)
 
+@section('json_ld')
+<script type="application/ld+json">
+{
+  "@@context": "https://schema.org",
+  "@@type": "BlogPosting",
+  "headline": "{{ $post->title }}",
+  "description": "{{ $post->excerpt }}",
+  "author": {
+    "@@type": "Person",
+    "name": "Maolabs"
+  },
+  "datePublished": "{{ $post->date }}",
+  "mainEntityOfPage": {
+    "@@type": "WebPage",
+    "@@id": "{{ url()->current() }}"
+  }
+}
+</script>
+@endsection
+
 @section('content')
     <article>
         <header class="post-header">

@@ -1,7 +1,7 @@
 ---
 title: "Arquitetura de Baixo Atrito"
 slug: "arquitetura-baixo-atrito"
-date: "2026-05-10"
+date: "2026-05-09"
 excerpt: "Por que escolher a simplicidade sobre a complexidade em projetos modernos?"
 tags:
   - arquitetura

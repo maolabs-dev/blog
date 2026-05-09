@@ -51,12 +51,19 @@ class Post
     {
         $object = YamlFrontMatter::parseFile($file);
 
+        $date = $object->date;
+        if ($date instanceof \DateTimeInterface) {
+            $date = $date->format('Y-m-d');
+        } elseif (is_numeric($date)) {
+            $date = date('Y-m-d', $date);
+        }
+
         return new static(
-            title: $object->title,
-            slug: $object->slug,
-            date: $object->date,
-            excerpt: $object->excerpt,
-            tags: $object->tags,
+            title: $object->title ?? 'Untitled Post',
+            slug: $object->slug ?? Str::slug($file->getBasename('.md')),
+            date: (string) ($date ?? now()->format('Y-m-d')),
+            excerpt: $object->excerpt ?? Str::limit(strip_tags(Str::markdown($object->body())), 150),
+            tags: $object->tags ?? [],
             published: $object->published ?? true,
             body: Str::markdown($object->body()),
             rawBody: $object->body()

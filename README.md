@@ -17,6 +17,12 @@ Um blog pessoal focado em **baixíssimo atrito**, minimalismo e performance.
 2. Rode `php artisan serve`.
 3. Acesse `http://localhost:8000`.
 
+## Testes
+Para garantir a integridade dos posts e das rotas:
+```bash
+php artisan test
+```
+
 ## Deploy (Kubernetes)
 1. Gere sua chave: `php artisan key:generate --show`.
 2. Configure o `k8s/setup.yaml` com a sua chave.
