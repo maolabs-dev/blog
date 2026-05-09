@@ -24,22 +24,11 @@
     <!-- JSON-LD Structured Data -->
     @yield('json_ld')
 
+    <!-- Preloads -->
+    <link rel="preload" as="style" href="/css/app.css">
+
     <link rel="stylesheet" href="/css/app.css">
 
-    <link rel="preconnect" href="https://fonts.googleapis.com">
-    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700&family=Outfit:wght@400;700;800&display=swap" rel="stylesheet">
-
-    <!-- Highlight.js for Syntax Highlighting -->
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/styles/github-dark.min.css">
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/highlight.min.js"></script>
-    <script>
-        document.addEventListener('DOMContentLoaded', (event) => {
-            document.querySelectorAll('pre code').forEach((el) => {
-                hljs.highlightElement(el);
-            });
-        });
-    </script>
 
     <!-- Analytics Placeholder -->
     @stack('analytics')
@@ -60,7 +49,7 @@
     <header class="header" role="banner">
         <div class="container header-inner">
             <a href="/" class="brand" aria-label="blog.maolabs — Página inicial">
-                <img src="/img/logo.png" alt="" class="logo">
+                <img src="/img/logo.webp" alt="Logo Maolabs" class="logo" width="40" height="40" fetchpriority="high">
                 <span>blog<span class="dot">.maolabs</span></span>
             </a>
 

@@ -58,15 +58,41 @@ class Post
             $date = date('Y-m-d', $date);
         }
 
+        $html = Str::markdown($object->body());
+        $html = static::highlightCode($html);
+
         return new static(
             title: $object->title ?? 'Untitled Post',
             slug: $object->slug ?? Str::slug($file->getBasename('.md')),
             date: (string) ($date ?? now()->format('Y-m-d')),
-            excerpt: $object->excerpt ?? Str::limit(strip_tags(Str::markdown($object->body())), 150),
+            excerpt: $object->excerpt ?? Str::limit(strip_tags($html), 150),
             tags: $object->tags ?? [],
             published: $object->published ?? true,
-            body: Str::markdown($object->body()),
+            body: $html,
             rawBody: $object->body()
         );
+    }
+
+    protected static function highlightCode(string $html): string
+    {
+        $highlighter = new \Highlight\Highlighter();
+        
+        // Adiciona highlight
+        $html = preg_replace_callback('/<pre><code class="language-(.*?)">([\s\S]*?)<\/code><\/pre>/', function ($matches) use ($highlighter) {
+            $lang = $matches[1];
+            $code = html_entity_decode($matches[2]);
+            
+            try {
+                $highlighted = $highlighter->highlight($lang, $code);
+                return "<pre><code class=\"hljs {$highlighted->language}\">{$highlighted->value}</code></pre>";
+            } catch (\Exception $e) {
+                return $matches[0];
+            }
+        }, $html);
+
+        // Adiciona lazy loading em imagens do markdown
+        $html = str_replace('<img ', '<img loading="lazy" ', $html);
+
+        return $html;
     }
 }

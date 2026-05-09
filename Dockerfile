@@ -23,6 +23,7 @@ WORKDIR /app
 # Copiar código e dependências
 COPY --from=deps /app/vendor ./vendor
 COPY . .
+COPY Caddyfile /etc/caddy/Caddyfile
 
 # Script de entrypoint
 COPY docker-entrypoint.sh /usr/local/bin/docker-entrypoint.sh

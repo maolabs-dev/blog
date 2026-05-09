@@ -9,6 +9,7 @@
         "php": "^8.3",
         "laravel/framework": "^13.7",
         "laravel/tinker": "^3.0",
+        "scrivo/highlight.php": "^9.18",
         "spatie/yaml-front-matter": "^2.1"
     },
     "require-dev": {
