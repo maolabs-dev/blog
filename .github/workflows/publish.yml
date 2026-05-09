@@ -53,7 +53,7 @@ jobs:
           coverage: none
 
       - name: 📦 Install Dependencies
-        run: composer install --no-ansi --no-interaction --no-scripts --no-progress --prefer-dist
+        run: composer install --no-ansi --no-interaction --no-scripts --no-progress --prefer-dist --ignore-platform-reqs
 
       - name: 🧪 Run Smoke Test
         run: php artisan test --filter PostTest
