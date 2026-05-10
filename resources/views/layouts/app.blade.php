@@ -25,9 +25,9 @@
     @yield('json_ld')
 
     <!-- Preloads -->
-    <link rel="preload" as="style" href="/css/app.css">
+    <link rel="preload" as="style" href="/css/app.css?v={{ filemtime(public_path('css/app.css')) }}">
 
-    <link rel="stylesheet" href="/css/app.css">
+    <link rel="stylesheet" href="/css/app.css?v={{ filemtime(public_path('css/app.css')) }}">
 
 
     <!-- Analytics Placeholder -->
