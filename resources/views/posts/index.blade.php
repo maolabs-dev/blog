@@ -6,10 +6,19 @@
     <div class="search" role="search">
         <form action="{{ route('posts.index') }}" method="GET" class="search-form" aria-label="buscar publicações">
             <label for="search-input" class="sr-only">buscar publicações</label>
-            <input type="search" id="search-input" name="search" value="{{ request('search') }}" placeholder="buscar publicações..." autocomplete="off">
-            @if(request('search'))
-                <a href="{{ route('posts.index') }}" class="search-clear" aria-label="Limpar busca">Limpar</a>
-            @endif
+            <div class="search-input-wrapper">
+                <svg class="search-icon" fill="none" stroke="currentColor" viewBox="0 0 24 24" aria-hidden="true">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"></path>
+                </svg>
+                <input type="search" id="search-input" name="search" value="{{ request('search') }}" placeholder="buscar publicações..." autocomplete="off">
+                @if(request('search'))
+                    <a href="{{ route('posts.index') }}" class="search-clear" aria-label="Limpar busca">
+                        <svg fill="none" stroke="currentColor" viewBox="0 0 24 24" aria-hidden="true">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"></path>
+                        </svg>
+                    </a>
+                @endif
+            </div>
         </form>
     </div>
 
