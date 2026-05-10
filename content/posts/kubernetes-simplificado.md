@@ -4,8 +4,6 @@ date: 2026-05-10
 tags:
   - kubernetes
   - devops
-  - arquitetura
-  - infraestrutura
 ---
 
 **TL;DR;** A implantação de serviços no Kubernetes baseia-se na coordenação de três frentes arquiteturais: isolamento lógico (Namespaces e Secrets), gerenciamento declarativo de estado e rede interna (Deployments e Services), e roteamento de tráfego externo (Ingress). A união desses manifestos atende, na maioria dos cenários, aos requisitos básicos de operação de aplicações conteinerizadas.

@@ -4,11 +4,8 @@ slug: "o-nascimento-deste-blog"
 date: "2026-05-09"
 excerpt: "Como a necessidade de reduzir a carga cognitiva no desenvolvimento com IA me levou a criar este espaço minimalista."
 tags:
- - arquitetura
- - ia
  - simplicidade
- - markdown
- - software
+ - ia
 published: true
 ---
 
