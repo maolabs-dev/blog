@@ -6,7 +6,7 @@ COPY composer.json composer.lock ./
 RUN composer install --no-dev --no-scripts --no-interaction --prefer-dist --optimize-autoloader
 
 # --- Stage 2: Runtime (FrankenPHP Alpine) ---
-FROM dunglas/frankenphp:1-php8.3-alpine
+FROM dunglas/frankenphp:1-php8.3.36-alpine
 
 # O FrankenPHP gerencia o próprio SSL, mas no K8s o Ingress faz isso.
 # Esta variável diz ao FrankenPHP para servir apenas HTTP localmente.
