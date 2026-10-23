@@ -10,5 +10,10 @@ Route::get('/posts/{slug}/raw', [PostController::class, 'raw'])->name('posts.raw
 
 Route::get('/sitemap.xml', function () {
     $posts = Post::all();
-    return response()->view('sitemap', compact('posts'))->header('Content-Type', 'text/xml');
+
+    // A declaração XML fica fora da view: com short_open_tag ligado (padrão sem php.ini,
+    // como no FrankenPHP), qualquer "<?" num template Blade é tratado como código PHP.
+    $xml = '<?xml version="1.0" encoding="UTF-8"?>'."\n".view('sitemap', compact('posts'))->render();
+
+    return response($xml)->header('Content-Type', 'text/xml');
 });

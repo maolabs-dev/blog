@@ -1,4 +1,3 @@
-{!! '<?xml version="1.0" encoding="UTF-8"?>' !!}{{-- Via Blade: com short_open_tag ligado (padrão sem php.ini, como no FrankenPHP), um "<?xml" literal vira código PHP. --}}
 <urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
     <url>
         <loc>{{ url('/') }}</loc>
